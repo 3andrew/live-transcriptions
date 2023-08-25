@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Live Transcriptions",
+  "version": "1.0",
+
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "tabCapture"
+  ],
+
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

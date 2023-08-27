@@ -25,16 +25,14 @@ function record() {
 
             // convert to file when recording ends
             mediaRecorder.ondataavailable = (event) => {
-                // to do: fix undefined event here
                 console.log("data:", event.data);
 
-                const blob = new Blob(event.data, {type: "audio/webm"});
-                const file = new File( [ blob ], "file.webm", {type: "audio/webm"} );
+                const blob = new Blob([event.data], {type: "audio/webm"});
+                const file = new File( [blob], "file.webm", {type: "audio/webm"} );
                 console.log("file:", file);
 
                 // convert to body of request
                 const formData = new FormData();
-                console.log("test1");
                 formData.append("model", "whisper-1");
                 formData.append("file", file);
                 console.log("request body:", formData);
@@ -58,8 +56,7 @@ const getTranscription = async (data) => {
         const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
             method: "POST",
             headers: {
-                "Authorization": "Bearer $API_TOKEN",
-                "Content-Type": "multipart/form-data"
+                "Authorization": "Bearer $API_TOKEN"
             },
             body: data
         });

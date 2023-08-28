@@ -24,12 +24,11 @@ function record() {
             } );
 
             // convert to file when recording ends
-            mediaRecorder.ondataavailable = (event) => {
-                // to do: fix undefined event here
+            mediaRecorder.ondataavailable = async (event) => {
                 console.log("data:", event.data);
 
-                const blob = new Blob(event.data, {type: "audio/webm"});
-                const file = new File( [ blob ], "file.webm", {type: "audio/webm"} );
+                const blob = new Blob([event.data], {type: "audio/webm"});
+                const file = new File([blob], "file.webm", {type: "audio/webm"});
                 console.log("file:", file);
 
                 // convert to body of request
@@ -39,27 +38,26 @@ function record() {
                 formData.append("file", file);
                 console.log("request body:", formData);
 
-                const text = getTranscription(formData);
+                const text = await getTranscription(formData);
                 console.log("transcription:", text);
+
+                document.getElementById("transcription-text").innerHTML += text;
             }
         }
     );
 }
+
 document.getElementById( "record-button" ).addEventListener("click", () => {
     record();
 } );
 
-// parameters: body: model, file, language
-// returns string
 const getTranscription = async (data) => {
-
     try {
         // make request to openai api https://platform.openai.com/docs/api-reference/audio/createTranscription
         const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
             method: "POST",
             headers: {
-                "Authorization": "Bearer $API_TOKEN",
-                "Content-Type": "multipart/form-data"
+                "Authorization": "Bearer $API_TOKEN"
             },
             body: data
         });
@@ -67,7 +65,7 @@ const getTranscription = async (data) => {
         return transcription.text;
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error("error:", error);
     }
 
 }

@@ -53,7 +53,7 @@ document.getElementById( "record-button" ).addEventListener("click", () => {
 
 const getTranscription = async (data) => {
     try {
-        // make request to openai api https://platform.openai.com/docs/api-reference/audio/createTranscription
+        // https://platform.openai.com/docs/api-reference/audio/createTranscription
         const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
             method: "POST",
             headers: {

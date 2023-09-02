@@ -6,7 +6,8 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "tabCapture"
+    "tabCapture",
+    "storage"
   ],
 
   "action": {

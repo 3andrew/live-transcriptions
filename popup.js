@@ -1,3 +1,19 @@
+var savedData = [];
+
+getData();
+
+async function getData (){
+    const result = await chrome.storage.local.get(["transcriptions"])
+    console.log("Value currently is " + result.transcriptions);
+    savedData = result.transcriptions;
+    if (savedData === undefined) {
+        savedData = [];
+    }
+    for (var i = 0; i < savedData.length; i++) {
+        document.getElementById("transcription-text").innerHTML += savedData[i] + "<br><br>";
+    }
+}
+
 function record() {
 
     // get the audio stream
@@ -42,7 +58,12 @@ function record() {
                 const text = await getTranscription(formData);
                 console.log("transcription:", text);
 
+                savedData.push(text);
+
                 document.getElementById("transcription-text").innerHTML += text + "<br><br>";
+
+                console.log("saved data:", savedData);
+                chrome.storage.local.set({ transcriptions: savedData });
             }
         }
     );

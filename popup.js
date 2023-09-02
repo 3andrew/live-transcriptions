@@ -21,6 +21,7 @@ function record() {
             // stop mediarecorder when button pressed
             document.getElementById( "stop-record-button").addEventListener("click", () => {
                 mediaRecorder.stop();
+                stream.getAudioTracks()[0].stop(); // deactivate mediastream
             } );
 
             // convert to file when recording ends
@@ -41,7 +42,7 @@ function record() {
                 const text = await getTranscription(formData);
                 console.log("transcription:", text);
 
-                document.getElementById("transcription-text").innerHTML += text;
+                document.getElementById("transcription-text").innerHTML += text + "<br><br>";
             }
         }
     );

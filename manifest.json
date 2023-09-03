@@ -11,6 +11,6 @@
   ],
 
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "js/index.html"
   }
 }

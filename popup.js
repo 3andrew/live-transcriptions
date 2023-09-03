@@ -46,6 +46,7 @@ function record() {
 
                 const blob = new Blob([event.data], {type: "audio/webm"});
                 const file = new File([blob], "file.webm", {type: "audio/webm"});
+
                 console.log("file:", file);
 
                 // convert to body of request

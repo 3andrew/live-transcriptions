@@ -2,20 +2,34 @@ var savedData = [];
 
 getData();
 
-async function getData (){
+document.getElementById("delete-all-button").addEventListener("click", () => {
+    clearData();
+});
+
+document.getElementById("record-button").addEventListener("click", () => {
+    record();
+});
+
+async function getData() {
     const result = await chrome.storage.local.get(["transcriptions"])
-    console.log("Value currently is " + result.transcriptions);
+
     savedData = result.transcriptions;
     if (savedData === undefined) {
         savedData = [];
     }
+
     for (var i = 0; i < savedData.length; i++) {
         document.getElementById("transcription-text").innerHTML += savedData[i] + "<br><br>";
     }
 }
 
-function record() {
+async function clearData() {
+    savedData = [];
+    chrome.storage.local.set({transcriptions: []});
+    document.getElementById("transcription-text").innerHTML = "";
+}
 
+function record() {
     // get the audio stream
     chrome.tabCapture.capture(
         {
@@ -35,10 +49,10 @@ function record() {
             mediaRecorder.start();
 
             // stop mediarecorder when button pressed
-            document.getElementById( "stop-record-button").addEventListener("click", () => {
+            document.getElementById("stop-record-button").addEventListener("click", () => {
                 mediaRecorder.stop();
                 stream.getAudioTracks()[0].stop(); // deactivate mediastream
-            } );
+            });
 
             // convert to file when recording ends
             mediaRecorder.ondataavailable = async (event) => {
@@ -64,15 +78,11 @@ function record() {
                 document.getElementById("transcription-text").innerHTML += text + "<br><br>";
 
                 console.log("saved data:", savedData);
-                chrome.storage.local.set({ transcriptions: savedData });
+                chrome.storage.local.set({transcriptions: savedData});
             }
         }
     );
 }
-
-document.getElementById( "record-button" ).addEventListener("click", () => {
-    record();
-} );
 
 const getTranscription = async (data) => {
     try {

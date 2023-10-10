@@ -1,4 +1,5 @@
 var savedData = [];
+var titles = [];
 
 getData();
 
@@ -11,21 +12,30 @@ document.getElementById("record-button").addEventListener("click", () => {
 });
 
 async function getData() {
-    const result = await chrome.storage.local.get(["transcriptions"])
+    // get saved transcriptions and titles from chrome storage
+    const savedTranscripts = await chrome.storage.local.get(["transcriptions"]);
+    const savedTitles = await chrome.storage.local.get(["titles"]);
 
-    savedData = result.transcriptions;
-    if (savedData === undefined) {
+    console.log(savedTranscripts)
+    savedData = savedTranscripts.transcriptions;
+    if (!savedData) {
         savedData = [];
     }
 
+    titles = savedTitles.titles;
+    if (!titles) {
+        titles = [];
+    }
+
     for (var i = 0; i < savedData.length; i++) {
-        document.getElementById("transcription-text").innerHTML += savedData[i] + "<br><br>";
+        document.getElementById("transcription-text").innerHTML += "<b>" + titles[i] + "</b><br>" + savedData[i] + "<br><br>";
     }
 }
 
 async function clearData() {
     savedData = [];
     chrome.storage.local.set({transcriptions: []});
+    chrome.storage.local.set({titles: []});
     document.getElementById("transcription-text").innerHTML = "";
 }
 
@@ -63,7 +73,7 @@ function record() {
 
                 console.log("file:", file);
 
-                // convert to body of request
+                // convert to body of request to API
                 const formData = new FormData();
 
                 formData.append("model", "whisper-1");
@@ -73,12 +83,18 @@ function record() {
                 const text = await getTranscription(formData);
                 console.log("transcription:", text);
 
+                // save the response from the API
                 savedData.push(text);
 
-                document.getElementById("transcription-text").innerHTML += text + "<br><br>";
+                // save current date as the default title
+                currentTime = new Date().toLocaleString();
+                titles.push(currentTime);
+
+                document.getElementById("transcription-text").innerHTML += "<b>" + currentTime + "</b><br>" + text + "<br><br>";
 
                 console.log("saved data:", savedData);
                 chrome.storage.local.set({transcriptions: savedData});
+                chrome.storage.local.set({titles: titles});
             }
         }
     );

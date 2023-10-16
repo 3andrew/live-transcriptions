@@ -11,6 +11,8 @@ document.getElementById("record-button").addEventListener("click", () => {
     record();
 });
 
+document.getElementById("stop-record-button").style.display = "none";
+
 async function getData() {
     // get saved transcriptions and titles from chrome storage
     const savedTranscripts = await chrome.storage.local.get(["transcriptions"]);
@@ -58,10 +60,15 @@ function record() {
 
             mediaRecorder.start();
 
+            document.getElementById("record-button").style.display = "none";
+            document.getElementById("stop-record-button").style.display = "block";
+
             // stop mediarecorder when button pressed
             document.getElementById("stop-record-button").addEventListener("click", () => {
                 mediaRecorder.stop();
                 stream.getAudioTracks()[0].stop(); // deactivate mediastream
+                document.getElementById("record-button").style.display = "block";
+                document.getElementById("stop-record-button").style.display = "none";
             });
 
             // convert to file when recording ends

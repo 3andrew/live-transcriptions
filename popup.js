@@ -1,10 +1,12 @@
+import { getData, clearData } from "./utils/storedData.js"
+
 var savedData = [];
 var titles = [];
 
-getData();
+getData(savedData, titles);
 
 document.getElementById("delete-all-button").addEventListener("click", () => {
-    clearData();
+    clearData(savedData, titles);
 });
 
 document.getElementById("record-button").addEventListener("click", () => {
@@ -12,34 +14,6 @@ document.getElementById("record-button").addEventListener("click", () => {
 });
 
 document.getElementById("stop-record-button").style.display = "none";
-
-async function getData() {
-    // get saved transcriptions and titles from chrome storage
-    const savedTranscripts = await chrome.storage.local.get(["transcriptions"]);
-    const savedTitles = await chrome.storage.local.get(["titles"]);
-
-    console.log(savedTranscripts)
-    savedData = savedTranscripts.transcriptions;
-    if (!savedData) {
-        savedData = [];
-    }
-
-    titles = savedTitles.titles;
-    if (!titles) {
-        titles = [];
-    }
-
-    for (var i = 0; i < savedData.length; i++) {
-        document.getElementById("transcription-text").innerHTML += "<b>" + titles[i] + "</b><br>" + savedData[i] + "<br><br>";
-    }
-}
-
-async function clearData() {
-    savedData = [];
-    chrome.storage.local.set({transcriptions: []});
-    chrome.storage.local.set({titles: []});
-    document.getElementById("transcription-text").innerHTML = "";
-}
 
 function record() {
     // get the audio stream

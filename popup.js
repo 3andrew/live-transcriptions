@@ -1,4 +1,4 @@
-import { getData, clearData } from "./utils/storedData.js"
+import {getData, clearData} from "./utils/storedData.js"
 
 var savedData = [];
 var titles = [];
@@ -68,7 +68,7 @@ function record() {
                 savedData.push(text);
 
                 // save current date as the default title
-                currentTime = new Date().toLocaleString();
+                const currentTime = (new Date()).toLocaleString();
                 titles.push(currentTime);
 
                 document.getElementById("transcription-text").innerHTML += "<b>" + currentTime + "</b><br>" + text + "<br><br>";

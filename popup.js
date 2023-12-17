@@ -3,7 +3,7 @@ import {getData, clearData} from "./utils/storedData.js"
 var savedData = [];
 var titles = [];
 
-getData(savedData, titles);
+[savedData, titles] = await getData(savedData, titles);
 
 document.getElementById("delete-all-button").addEventListener("click", () => {
     clearData(savedData, titles);

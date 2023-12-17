@@ -3,7 +3,7 @@ export async function getData(savedData, titles) {
     const savedTranscripts = await chrome.storage.local.get(["transcriptions"]);
     const savedTitles = await chrome.storage.local.get(["titles"]);
 
-    console.log(savedTranscripts)
+    console.log("savedTranscripts:", savedTranscripts)
     savedData = savedTranscripts.transcriptions;
     if (!savedData) {
         savedData = [];
@@ -17,6 +17,8 @@ export async function getData(savedData, titles) {
     for (var i = 0; i < savedData.length; i++) {
         document.getElementById("transcription-text").innerHTML += "<b>" + titles[i] + "</b><br>" + savedData[i] + "<br><br>";
     }
+
+    return [savedData, titles]
 }
 
 export async function clearData(savedData, titles) {

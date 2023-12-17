@@ -14,9 +14,23 @@ export async function getData(savedData, titles) {
         titles = [];
     }
 
-    for (var i = 0; i < savedData.length; i++) {
-        document.getElementById("transcription-text").innerHTML += "<b>" + titles[i] + "</b><br>" + savedData[i] + "<br><br>";
-    }
+    for (var i = 0; i < savedData.length; i++) (function(i){
+        let transcription = document.createElement("div");
+        transcription.id = "div-" + i.toString();
+        transcription.innerHTML = "<b>" + titles[i] + "</b><br>" + savedData[i] + "<br><br>";
+
+        let copyButton = document.createElement("button");
+        copyButton.type = "button"
+        copyButton.innerHTML = "Copy";
+        copyButton.addEventListener("click", function(){
+            console.log("Copied text")
+            navigator.clipboard.writeText(savedData[i]);
+        })
+
+        transcription.appendChild(copyButton);
+
+        document.getElementById("transcription-text").appendChild(transcription);
+    })(i)
 
     return [savedData, titles]
 }
